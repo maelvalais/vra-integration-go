@@ -1,0 +1,42 @@
+{
+	"ImportPath": "cozysystems.net/projects/CloudNative/repos/cozysystems.net",
+	"GoVersion": "go1.9",
+	"GodepVersion": "v79",
+	"Deps": [
+		{
+			"ImportPath": "github.com/dghubble/sling",
+			"Comment": "v1.1.0-6-g80ec33c",
+			"Rev": "80ec33c6152a53edb5545864ca37567b506c4ca5"
+		},
+		{
+			"ImportPath": "github.com/google/go-querystring/query",
+			"Rev": "53e6ce116135b80d037921a7fdd5138cf32d7a8a"
+		},
+		{
+			"ImportPath": "github.com/jehiah/go-strftime",
+			"Rev": "1d33003b386959af197ba96475f198c114627b5e"
+		},
+		{
+			"ImportPath": "github.com/magiconair/properties",
+			"Comment": "v1.7.6-3-g2c9e950",
+			"Rev": "2c9e9502788518c97fe44e8955cd069417ee89df"
+		},
+		{
+			"ImportPath": "github.com/sirupsen/logrus",
+			"Comment": "v1.0.3-11-g89742ae",
+			"Rev": "89742aefa4b206dcf400792f3bd35b542998eb3b"
+		},
+		{
+			"ImportPath": "golang.org/x/crypto/ssh/terminal",
+			"Rev": "81e90905daefcd6fd217b62423c0908922eadb30"
+		},
+		{
+			"ImportPath": "golang.org/x/sys/unix",
+			"Rev": "bb24a47a89eac6c1227fbcb2ae37a8b9ed323366"
+		},
+		{
+			"ImportPath": "golang.org/x/sys/windows",
+			"Rev": "bb24a47a89eac6c1227fbcb2ae37a8b9ed323366"
+		}
+	]
+}
