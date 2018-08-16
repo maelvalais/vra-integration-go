@@ -79,18 +79,15 @@ func (c *CatalogItemRequest) WaitForCompletion(apiC *apiclient.OnecloudAPICLient
 	return currentStatus,nil
 }
 
-func (c *CatalogItemRequest) GetADPRequestIDFromCatalogItemRequest() (string, bool)  {
+func (c *CatalogItemRequest) GetCozyRequestIDFromCatalogItemRequest() (string, bool)  {
 
-	log.WithFields(log.Fields{"package": "requests","function": "GetADPRequestIDFromCatalogItemRequest",}).Debugf("Attempting to search for provider-ADP.Server.RequestID inside Catalog Item request ID: %s", c.ID)
      entries := c.RequestData.Entries
      for _,kv := range entries{
-     	if kv["key"] == "provider-ADP.Server.RequestId"{
+     	if kv["key"] == "provider-*.Server.RequestId"{
      		t := kv["value"].(map[string]interface{})
-			log.WithFields(log.Fields{"package": "requests","function": "GetADPRequestIDFromCatalogItemRequest",}).Debugf("Found provider-ADP.Server.RequestID : %s", t["value"].(string))
      		return t["value"].(string),false
 		}
 	 }
-	log.WithFields(log.Fields{"package": "requests","function": "GetADPRequestIDFromCatalogItemRequest",}).Debugf("Did not find provider-ADP.Server.RequestID")
 	 return "", true
 }
 
@@ -117,7 +114,6 @@ func (c *CatalogItemRequest) GetCatalogResourcesFromRequest(apiC *apiclient.Onec
 	return getResourcesResp, nil
 }
 
-/*[Rajan TODO] Evaluate if this can be changed to use smartcloud.es.ad.adp.com/catalog-service/api/consumer/resources/types/Infrastructure.Machine */
 func (c *CatalogItemRequest) GetCatalogResourcesOfTypeVMFromReq(apiC *apiclient.OnecloudAPICLient, filter string) ([]*CatalogResource, error){
 
 	log.WithFields(log.Fields{"package": "requests","function": "GetCatalogResourcesOfTypeVMFromReq",}).Debugf("Catalog request ID: %s  Filter: %s", c.ID,filter)
@@ -185,11 +181,11 @@ func GetAllGenericRequests(apiC *apiclient.OnecloudAPICLient, filter string) (*R
 
 }
 
-func FilterCatalogItemReqByADPReqID(reqID string, c []*CatalogItemRequest) []*CatalogItemRequest{
+func FilterCatalogItemReqByCozyReqID(reqID string, c []*CatalogItemRequest) []*CatalogItemRequest{
 
 	var ctlgReqs []*CatalogItemRequest
 	for _,r := range c {
-		if x,_ := r.GetADPRequestIDFromCatalogItemRequest(); x == reqID {
+		if x,_ := r.GetCozyRequestIDFromCatalogItemRequest(); x == reqID {
 			ctlgReqs = append(ctlgReqs, r)
 		}
 	}

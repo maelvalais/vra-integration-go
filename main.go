@@ -19,8 +19,8 @@ func main() {
 
 	log.SetLevel(log.DebugLevel)
 	fmt.Println("************************************************ USAGE ************************************************")
-	fmt.Println("cozysystems.net -username=pudupatr -password=*** -tenant=adp -action=createVMs  -vmtemplate=/home/rajan/vm.properties")
-	fmt.Println("cozysystems.net -username=pudupatr -password=*** -tenant=adp -action=destroyVMs -vmlist=CDLCLDVMGXXYY,CDLCLDVMGXXYY,CDLCLDVMGXXYY")
+	fmt.Println("cozysystems.net -username=pudupatr -password=*** -tenant= -action=createVMs  -vmtemplate=/home/rajan/vm.properties")
+	fmt.Println("cozysystems.net -username=pudupatr -password=*** -tenant= -action=destroyVMs -vmlist=CDLCLDVMGXXYY,CDLCLDVMGXXYY,CDLCLDVMGXXYY")
 	fmt.Println("")
 	fmt.Println("Sample VM template file can be found at https://cozysystems.net/projects/CloudNative/repos/cozysystems.net/browse/examples/vm.properties")
 	fmt.Println("*******************************************************************************************************")
@@ -39,7 +39,7 @@ func main() {
 	passwd := *password
 	ten := *tenant
 
-	oneCloudClient,err := apiclient.NewAPIClient(user,passwd,ten,"smartcloud.es.ad.adp.com","443")
+	oneCloudClient,err := apiclient.NewAPIClient(user,passwd,ten,"$HOST","443")
 	if err != nil {
 		log.WithFields(log.Fields{"package": "main","function": "main",}).Fatal("OneCloud Client creation failed . Fatal Error: %s", err)
 		os.Exit(1)
@@ -95,7 +95,7 @@ func main() {
 			CatalogItemID: strings.TrimSpace(cfg.CatalogItemID),
 			Data: data,
 			Description: "Request from CaaS teams' Onecloud GO library",
-			RequestedFor: user+"@ES.AD.ADP.COM",
+			RequestedFor: user+"@COZYSYSTEMS.NET",
 			Type: "com.vmware.vcac.catalog.domain.request.CatalogItemProvisioningRequest",
 		}
 
@@ -124,16 +124,13 @@ func CreateVMS(oneCloudClient *apiclient.OnecloudAPICLient, reqTemplate *provisi
 
 	OnecloudVMRequestResponse,_ := provisioning.RequestVMfromTemplate(oneCloudClient, reqTemplate)
 	log.WithFields(log.Fields{"package": "main","function": "CreateVMS",}).Debugf("VRA response for VMCreation request -> %s", OnecloudVMRequestResponse)
-	adpReqID := OnecloudVMRequestResponse.ID
-	log.WithFields(log.Fields{"package": "main","function": "CreateVMS",}).Debugf("VRA ADP Request ID : %s", adpReqID)
-	r,_ := requests.GetRequestResponse(adpReqID,oneCloudClient)
+	cozyReqID := OnecloudVMRequestResponse.ID
+	r,_ := requests.GetRequestResponse(cozyReqID,oneCloudClient)
 	currentStatus,err := r.GetLatestStatus(oneCloudClient)
-	log.WithFields(log.Fields{"package": "main","function": "CreateVMS",}).Debugf("ADP Request ID status : %s", currentStatus)
-	if err == nil {
+maersk	if err == nil {
 		r.WaitForCompletion(oneCloudClient)
 
 	} else {
-		log.WithFields(log.Fields{"package": "main","function": "CreateVMS",}).Debugf("ADP Request ID %s has failed! Fatal Error!", adpReqID)
 		log.WithFields(log.Fields{"package": "main","function": "CreateVMS",}).Fatal(err)
 	}
 
@@ -153,8 +150,7 @@ func CreateVMS(oneCloudClient *apiclient.OnecloudAPICLient, reqTemplate *provisi
 	}
 
 
-	reqs := requests.FilterCatalogItemReqByADPReqID(adpReqID,CatalogItemReqs)
-	log.WithFields(log.Fields{"package": "main","function": "CreateVMS",}).Debugf("Successfully filtered CatalogItemRequests based on ADP request id: %s.  No of requests found: %s",adpReqID, len(CatalogItemReqs))
+	reqs := requests.FilterCatalogItemReqByCozyReqID(cozyReqID,CatalogItemReqs)
 
 	var vmList []string
 
